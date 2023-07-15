@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull;
 public class Expense {
 	
 	public static enum Category {
-		HOUSING, TRANSPORTATION, FOOD, UTILITIES, CLOTHING, INSURANCE
+		HOUSING, TRANSPORTATION, FOOD, UTILITIES, CLOTHING, INSURANCE, DEFAULT
 	}
 	
 	@Id
