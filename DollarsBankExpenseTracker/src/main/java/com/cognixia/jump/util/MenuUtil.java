@@ -1,6 +1,8 @@
 package com.cognixia.jump.util;
 
-import com.cognixia.jump.model.User;
+import java.text.DecimalFormat;
+
+import com.cognixia.jump.model.MonthlyBudget;
 
 public class MenuUtil {
 
@@ -43,7 +45,8 @@ public class MenuUtil {
 		System.out.println("5. Show Month's Budget");
 		System.out.println("6. Show Year's Budget");
 		System.out.println("7. Display Customer Information");
-		System.out.println("8. Sign Out\n");
+		System.out.println("8. Export Expenses and Budgets to CSV");
+		System.out.println("9. Sign Out\n");
 		
 		System.out.println(ColorUtility.GREEN_TEXT + name + ", please enter an option (1, 2, 3, 4, 5, 6, or 7)" + ColorUtility.TEXT_RESET);
 	}
@@ -53,6 +56,65 @@ public class MenuUtil {
 		System.out.println("# Thank you for using our expense application! #");
 		System.out.println("#               See you soon!                  #");
 		System.out.println("################################################\n" + ColorUtility.TEXT_RESET);
+	}
+
+
+	public static double printMonthlyBudget(String month, DecimalFormat df, MonthlyBudget budget) {
+		month.toUpperCase();
+		double monthlyBudget = 0;
+		switch (month) {
+			case "JANUARY":
+				monthlyBudget = budget.getJanuary().doubleValue();
+				System.out.println("Monthly Budget: \t$" + df.format(budget.getJanuary().doubleValue()));
+				break;
+			case "FEBRUARY":
+				monthlyBudget = budget.getFebruary().doubleValue();
+				System.out.println("Monthly Budget: \t$" + df.format(budget.getFebruary().doubleValue()));
+				break;
+			case "MARCH":
+				monthlyBudget = budget.getMarch().doubleValue();
+				System.out.println("Monthly Budget: \t$" + df.format(budget.getMarch().doubleValue()));
+				break;
+			case "APRIL":
+				monthlyBudget = budget.getApril().doubleValue();
+				System.out.println("Monthly Budget: \t$" + df.format(budget.getApril().doubleValue()));
+				break;
+			case "MAY":
+				monthlyBudget = budget.getMay().doubleValue();
+				System.out.println("Monthly Budget: \t$" + df.format(budget.getMay().doubleValue()));
+				break;
+			case "JUNE":
+				monthlyBudget = budget.getJune().doubleValue();
+				System.out.println("Monthly Budget: \t$" + df.format(budget.getJune().doubleValue()));
+				break;
+			case "JULY":
+				monthlyBudget = budget.getJuly().doubleValue();
+				System.out.println("Monthly Budget: \t$" + df.format(budget.getJuly().doubleValue()));
+				break;
+			case "AUGUST":
+				monthlyBudget = budget.getAugust().doubleValue();
+				System.out.println("Monthly Budget: \t$" + df.format(budget.getAugust().doubleValue()));
+				break;
+			case "SEPTEMBER":
+				monthlyBudget = budget.getSeptember().doubleValue();
+				System.out.println("Monthly Budget: \t$" + df.format(budget.getSeptember().doubleValue()));
+				break;
+			case "OCTOBER":
+				monthlyBudget = budget.getOctober().doubleValue();
+				System.out.println("Monthly Budget: \t$" + df.format(budget.getOctober().doubleValue()));
+				break;
+			case "NOVEMBER":
+				monthlyBudget = budget.getNovember().doubleValue();
+				System.out.println("Monthly Budget: \t$" + df.format(budget.getNovember().doubleValue()));
+				break;
+			case "DECEMBER":
+				monthlyBudget = budget.getDecember().doubleValue();
+				System.out.println("Monthly Budget: \t$" + df.format(budget.getDecember().doubleValue()));
+				break;
+			default:
+				break;
+		}
+		return monthlyBudget;
 	}
 	
 }

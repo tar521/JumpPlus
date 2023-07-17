@@ -214,6 +214,14 @@ public class MonthlyBudget {
 	public void setYearlyBudget(Double yearlyBudget) {
 		this.yearlyBudget = yearlyBudget;
 	}
+
+	@Override
+	public String toString() {
+		return "[year=" + year + ", january=" + january + ", february=" + february + ", march=" + march
+				+ ", april=" + april + ", may=" + may + ", june=" + june + ", july=" + july + ", august=" + august
+				+ ", september=" + september + ", october=" + october + ", november=" + november + ", december="
+				+ december + ", yearlyBudget=" + yearlyBudget + "]";
+	}
 	
 	
 

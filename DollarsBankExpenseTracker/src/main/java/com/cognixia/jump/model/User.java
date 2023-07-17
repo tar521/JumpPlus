@@ -155,8 +155,21 @@ public class User {
 				+ "\n\n" + ColorUtility.PURPLE_TEXT + "ACCOUNT INFO:" + ColorUtility.TEXT_RESET
 				+ "\nCustomer ID: \t" + id.toString()
 				+ "\nUsername:    \t" + username
-				+ "\nPassword:    \t" + password
+				+ "\nPassword:    \t" + password + " (encoded)"
 				+ "\n";
+//				+ "\n"
+//				+ "\n"
+//				+ "\n"
+//				+ "\n"
+//				+ "\n"
+//				+ "\n"
+//				+ "\n"
+//				+ "\n"
+//				+ "\n"
+//				+ "\n"
+//				+ "\n"
+//				+ "\n";
+		
 	}
 
 	

@@ -1,6 +1,7 @@
 package com.cognixia.jump.service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,6 +15,15 @@ public class AccountService {
 	
 	@Autowired
 	private AccountRespository repo;
+	
+	public Account getAccount(User user) {
+		Optional<Account> found = repo.findById(user.getAccount().getId());
+		
+		if (found.isEmpty()) {
+			return null;
+		}
+		return found.get();
+	}
 	
 	public Account createAccount(Account account) {
 		account.setId(null);

@@ -1,14 +1,16 @@
 package com.cognixia.jump.service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.cognixia.jump.model.Account;
 import com.cognixia.jump.model.Expense;
 import com.cognixia.jump.model.User;
 import com.cognixia.jump.repository.ExpenseRepository;
@@ -42,6 +44,18 @@ public class ExpenseService {
 		
 	}
 	
+	public Expense removeExpenseById(int id) {
+		Optional<Expense> found = repo.findById(Integer.valueOf(id));
+		
+		if (found.isEmpty()) {
+			return null;
+		}
+		
+		repo.delete(found.get());
+		
+		return found.get();
+	}
+	
 	public List<Expense> getExpensesByUser(User user) {
 		return repo.findExpensesByUser(user.getId());
 	}
@@ -54,10 +68,16 @@ public class ExpenseService {
 			}
 		}
 		
-		if (years.isEmpty()) {
-			return null;
-		}
-		
 		return years;
+	}
+
+	public void sortExpenses(User user) {
+		Collections.sort(user.getExpenses(), new Comparator<Expense>() {
+			@Override
+			public int compare(Expense e1, Expense e2) {
+				return e1.getDate().compareTo(e2.getDate());
+			}
+		});
+		
 	}
 }

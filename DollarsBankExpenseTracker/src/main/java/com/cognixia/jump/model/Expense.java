@@ -38,21 +38,16 @@ public class Expense {
 	@JoinColumn(name = "user_id")
 	private User user;
 	
-	@ManyToOne
-	@JoinColumn(name = "account_id")
-	private Account account;
 	
 	public Expense() {}
 
-	public Expense(Integer id, Category category, @NotNull double amount, @NotNull LocalDateTime date, User user,
-			Account account) {
+	public Expense(Integer id, Category category, @NotNull double amount, @NotNull LocalDateTime date, User user) {
 		super();
 		this.id = id;
 		this.category = category;
 		this.amount = amount;
 		this.date = date;
 		this.user = user;
-		this.account = account;
 	}
 
 	public Integer getId() {
@@ -95,12 +90,9 @@ public class Expense {
 		this.user = user;
 	}
 
-	public Account getAccount() {
-		return account;
-	}
-
-	public void setAccount(Account account) {
-		this.account = account;
+	@Override
+	public String toString() {
+		return "Expense [id=" + id + ", category=" + category + ", amount=" + amount + ", date=" + date  + "]";
 	}
 	
 	

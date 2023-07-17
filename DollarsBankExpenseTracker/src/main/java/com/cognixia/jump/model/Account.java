@@ -1,17 +1,13 @@
 package com.cognixia.jump.model;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Account {
@@ -23,18 +19,13 @@ public class Account {
 	@NotNull
 	private LocalDateTime dateCreated;
 	
-	@OneToMany(mappedBy = "account")
-	@JsonIgnore
-	private List<Expense> expenses;
-	
 	@OneToOne(mappedBy = "account")
 	private User user;
 	
-	public Account(Integer id, @NotNull LocalDateTime dateCreated, List<Expense> expenses, User user) {
+	public Account(Integer id, @NotNull LocalDateTime dateCreated, User user) {
 		super();
 		this.id = id;
 		this.dateCreated = dateCreated;
-		this.expenses = expenses;
 		this.user = user;
 	}
 
@@ -65,12 +56,9 @@ public class Account {
 		this.dateCreated = dateCreated;
 	}
 
-	public List<Expense> getExpenses() {
-		return expenses;
-	}
-
-	public void setExpenses(List<Expense> expenses) {
-		this.expenses = expenses;
+	@Override
+	public String toString() {
+		return "Account created " + dateCreated + "\n";
 	}
 	
 	

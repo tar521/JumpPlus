@@ -38,7 +38,6 @@ public class UserService {
 	
 	public User createUser(User user) {
 		user.setId(null);
-		user.setPassword(Base64.getEncoder().encodeToString(user.getPassword().getBytes()));
 		
 		User created = repo.save(user);
 		
@@ -55,6 +54,14 @@ public class UserService {
 		
 		return null;
 		
+	}
+	
+	public boolean uniqueUsername(String username) {
+		Optional<User> found = repo.findByUsername(username);
+		if (found.isEmpty()) {
+			return true;
+		}
+		return false;
 	}
 	
 

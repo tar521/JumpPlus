@@ -39,4 +39,15 @@ public class MonthlyBudgetService {
 		return repo.findBudgetByUserId(user.getId());
 	}
 
+	public boolean yearExists(String year, User user) {
+		for (MonthlyBudget b : user.getBudget()) {
+			if (b.getYear().equals(year)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	
+
 }
