@@ -37,25 +37,25 @@ import com.cognixia.jump.util.MenuUtil;
 
 @Component
 public class ExpenseTrackerApp {
-	
+
 	public static Scanner sc = new Scanner(System.in);
-	
+
 	private User user = null;
-	
+
 	@Autowired
 	private AccountService accountService;
-	
+
 	@Autowired
 	private ExpenseService expenseService;
-	
+
 	@Autowired
 	private MonthlyBudgetService budgetService;
-	
+
 	@Autowired
 	private UserService userService;
-	
+
 	public void entryPoint() {
-		
+
 		do {
 			MenuUtil.greeting();
 			try {
@@ -63,7 +63,7 @@ public class ExpenseTrackerApp {
 				int option = sc.nextInt();
 				sc.nextLine();
 				System.out.print(ColorUtility.TEXT_RESET);
-				
+
 				switch (option) {
 				case 1: // create user and account
 					newUser();
@@ -84,28 +84,24 @@ public class ExpenseTrackerApp {
 				default:
 					throw new IllegalOptionException();
 				}
-				
-				
-				
-			}
-			catch (InputMismatchException e) {
+
+			} catch (InputMismatchException e) {
 				sc.nextLine();
-				System.out.println(ColorUtility.RED_TEXT + "Not a listed option. Please input a valid option.\n" + ColorUtility.TEXT_RESET);
-			}
-			catch (IllegalOptionException e) {
+				System.out.println(ColorUtility.RED_TEXT + "Not a listed option. Please input a valid option.\n"
+						+ ColorUtility.TEXT_RESET);
+			} catch (IllegalOptionException e) {
 				System.out.println(ColorUtility.RED_TEXT + "Not a listed option.\n");
 				System.out.println(e.getMessage() + ColorUtility.TEXT_RESET);
-			}
-			catch (UserNotFoundException e) {
+			} catch (UserNotFoundException e) {
 				System.out.println(ColorUtility.RED_TEXT + "Username or password incorrect. Please try again.\n");
 				System.out.println(e.getMessage() + ColorUtility.TEXT_RESET);
-			}
-			catch (SQLException e) {
-				System.out.println(ColorUtility.RED_TEXT + "Error referencing database. Please email info@dollarsbank.com with this issue.\n");
+			} catch (SQLException e) {
+				System.out.println(ColorUtility.RED_TEXT
+						+ "Error referencing database. Please email info@dollarsbank.com with this issue.\n");
 				System.out.println(ColorUtility.RED_TEXT + "Now exiting the program...\n" + ColorUtility.TEXT_RESET);
 				return;
 			}
-		} while(true);
+		} while (true);
 	}
 
 	private int existingUser() {
@@ -118,13 +114,13 @@ public class ExpenseTrackerApp {
 			if (cred.getUsername().equalsIgnoreCase("exit")) {
 				return -1;
 			}
-			
+
 			System.out.println(ColorUtility.TEXT_RESET + "Password:" + ColorUtility.CYAN_TEXT);
 			cred.setPassword(sc.nextLine());
 			if (cred.getPassword().equalsIgnoreCase("exit")) {
 				return -1;
 			}
-			
+
 			try {
 				user = userService.authenticate(cred);
 				if (user == null) {
@@ -138,106 +134,106 @@ public class ExpenseTrackerApp {
 				} else {
 					expenseService.sortExpenses(user);
 				}
-				
+
 				return 1;
-			} catch(SQLException e) {
+			} catch (SQLException e) {
 				e.printStackTrace();
-				System.out.println(ColorUtility.TEXT_RESET + ColorUtility.RED_TEXT + "Connection Error Occurred: Please try again later.\n" + ColorUtility.TEXT_RESET);
+				System.out.println(ColorUtility.TEXT_RESET + ColorUtility.RED_TEXT
+						+ "Connection Error Occurred: Please try again later.\n" + ColorUtility.TEXT_RESET);
 				return 0;
-			} catch(UserNotFoundException e) {
-				System.out.println(ColorUtility.TEXT_RESET + ColorUtility.RED_TEXT + "Invalid Credentials. Try Again!" + ColorUtility.TEXT_RESET);
+			} catch (UserNotFoundException e) {
+				System.out.println(ColorUtility.TEXT_RESET + ColorUtility.RED_TEXT + "Invalid Credentials. Try Again!"
+						+ ColorUtility.TEXT_RESET);
 				continue;
 			} catch (Exception e) {
-				
+
 			}
-		} while(true);
+		} while (true);
 	}
 
 	private void newUser() {
 		user = new User();
 		String phonePattern = "\\d{10}|(?:\\d{3}-){2}\\d{4}|\\(\\d{3}\\)\\d{3}-?\\d{4}";
-		String passPattern  = "^(?=.*[0-9])"
-                + "(?=.*[a-z])(?=.*[A-Z])"
-                + "(?=.*[!@#$%^&+=])"
-                + "(?=\\S+$).{8,20}$";
-		
+		String passPattern = "^(?=.*[0-9])" + "(?=.*[a-z])(?=.*[A-Z])" + "(?=.*[!@#$%^&+=])" + "(?=\\S+$).{8,20}$";
+
 		MenuUtil.menuMakeAccount();
 		System.out.println("Customer Name:" + ColorUtility.CYAN_TEXT);
 		user.setName(sc.nextLine());
-		
+
 		System.out.println(ColorUtility.TEXT_RESET + "Customer Address:" + ColorUtility.CYAN_TEXT);
 		user.setAddress(sc.nextLine());
-		
+
 		// USERNAME
 		do {
-			System.out.println(ColorUtility.TEXT_RESET +"Customer Username:" + ColorUtility.CYAN_TEXT);
+			System.out.println(ColorUtility.TEXT_RESET + "Customer Username:" + ColorUtility.CYAN_TEXT);
 			String temp = sc.nextLine();
-			
-			if(userService.uniqueUsername(temp)) {
+
+			if (userService.uniqueUsername(temp)) {
 				user.setUsername(temp);
 				break;
+			} else {
+				System.out.println(
+						ColorUtility.RED_TEXT + "Username not available - Try Again!" + ColorUtility.TEXT_RESET);
 			}
-			else {
-				System.out.println(ColorUtility.RED_TEXT + "Username not available - Try Again!" + ColorUtility.TEXT_RESET);
-			}
-		}while(true);
-		
+		} while (true);
+
 		// PHONE
 		do {
 			System.out.println(ColorUtility.TEXT_RESET + "Customer Contact Number:" + ColorUtility.CYAN_TEXT);
 			String temp = sc.nextLine();
-			
+
 			if (temp.matches(phonePattern)) {
 				user.setPhone(temp);
 				break;
+			} else {
+				System.out.println(ColorUtility.TEXT_RESET + ColorUtility.RED_TEXT
+						+ "Not valid phone number - Try Again!" + ColorUtility.TEXT_RESET);
 			}
-			else {
-				System.out.println(ColorUtility.TEXT_RESET + ColorUtility.RED_TEXT + "Not valid phone number - Try Again!" + ColorUtility.TEXT_RESET);
-			}
-			
-		}while(true);
-		
+
+		} while (true);
+
 		// PASSWORD
 		Pattern p = Pattern.compile(passPattern);
 		do {
-			System.out.println(ColorUtility.TEXT_RESET + "Password: " + ColorUtility.PURPLE_TEXT + "8 Characters Min With Lower, Upper, Number, and Special" + ColorUtility.CYAN_TEXT);
+			System.out.println(ColorUtility.TEXT_RESET + "Password: " + ColorUtility.PURPLE_TEXT
+					+ "8 Characters Min With Lower, Upper, Number, and Special" + ColorUtility.CYAN_TEXT);
 			String temp = sc.nextLine();
 			temp = temp.replaceAll("\n", "");
 			temp = temp.replaceAll("\\s", "");
 			Matcher m = p.matcher(temp);
-			
+
 			if (m.matches()) {
 				user.setPassword(Base64.getEncoder().encodeToString(temp.getBytes()));
 				break;
+			} else {
+				System.out.println(ColorUtility.TEXT_RESET + ColorUtility.RED_TEXT + "Invalid Password - Try Again!"
+						+ ColorUtility.TEXT_RESET);
 			}
-			else {
-				System.out.println(ColorUtility.TEXT_RESET + ColorUtility.RED_TEXT + "Invalid Password - Try Again!" + ColorUtility.TEXT_RESET);
-			}
-			
-		}while(true);
-		
+
+		} while (true);
+
 		// DEFAULT ACCOUNT AND BUDGET
 		user.setExpenses(new ArrayList<Expense>());
 		user = userService.createUser(user);
-		
+
 		Account account = new Account(null, null, user);
 		user.setAccount(accountService.createAccount(account));
-		
-		MonthlyBudget budget = new MonthlyBudget(null, Integer.toString(LocalDateTime.now().getYear()), Double.valueOf(0.0),
-									Double.valueOf(0.0), Double.valueOf(0.0), Double.valueOf(0.0), Double.valueOf(0.0), Double.valueOf(0.0),
-									Double.valueOf(0.0), Double.valueOf(0.0), Double.valueOf(0.0), Double.valueOf(0.0), Double.valueOf(0.0),
-									Double.valueOf(0.0), Double.valueOf(0.0), user);
+
+		MonthlyBudget budget = new MonthlyBudget(null, Integer.toString(LocalDateTime.now().getYear()),
+				Double.valueOf(0.0), Double.valueOf(0.0), Double.valueOf(0.0), Double.valueOf(0.0), Double.valueOf(0.0),
+				Double.valueOf(0.0), Double.valueOf(0.0), Double.valueOf(0.0), Double.valueOf(0.0), Double.valueOf(0.0),
+				Double.valueOf(0.0), Double.valueOf(0.0), Double.valueOf(0.0), user);
 		user.setBudget(new ArrayList<MonthlyBudget>());
 		user.getBudget().add(budgetService.createExpense(budget));
 		userService.updateUser(user);
 		user = null;
-		
+
 		System.out.println(ColorUtility.GREEN_TEXT + "\nAccount Created!\n");
 		System.out.println("Default budget has been created for year " + LocalDateTime.now().getYear());
 		System.out.println("Values set to zero.\n" + ColorUtility.TEXT_RESET);
-		
+
 	}
-	
+
 	private void session() {
 		do {
 			System.out.println();
@@ -247,7 +243,7 @@ public class ExpenseTrackerApp {
 				int option = sc.nextInt();
 				sc.nextLine();
 				System.out.print(ColorUtility.TEXT_RESET);
-				
+
 				switch (option) {
 				case 1: // New Expense
 					expenseAction("NewExpense");
@@ -272,7 +268,7 @@ public class ExpenseTrackerApp {
 					String month = validateMonth();
 					displayBudget(year, month);
 					break;
-				case 6: 
+				case 6:
 					// show years budget
 					String yearBudget = validateYear();
 					displayBudget(yearBudget);
@@ -289,7 +285,8 @@ public class ExpenseTrackerApp {
 					try {
 						CsvUtil.writeExpensesToCsv(user);
 						CsvUtil.writeBudgetsToCsv(user);
-						System.out.println(ColorUtility.GREEN_TEXT + "\nSuccessfully wrote expenses and budgets to csv files!");
+						System.out.println(
+								ColorUtility.GREEN_TEXT + "\nSuccessfully wrote expenses and budgets to csv files!");
 						System.out.println("They can be found in the base directory.\n" + ColorUtility.TEXT_RESET);
 					} catch (IOException e) {
 						System.out.println(ColorUtility.RED_TEXT + "Error writing to file\n" + ColorUtility.TEXT_RESET);
@@ -303,18 +300,17 @@ public class ExpenseTrackerApp {
 				default:
 					throw new IllegalOptionException();
 				}
-			}catch(InputMismatchException e) {
-				System.out.println(ColorUtility.RED_TEXT + "\nInvalid input - Please input a listed option\n" + ColorUtility.TEXT_RESET);
+			} catch (InputMismatchException e) {
+				System.out.println(ColorUtility.RED_TEXT + "\nInvalid input - Please input a listed option\n"
+						+ ColorUtility.TEXT_RESET);
 				sc.nextLine();
-			}catch(IllegalOptionException e) {
-				System.out.println(ColorUtility.RED_TEXT + "\nNot a listed option - Please input a listed option\n" + ColorUtility.TEXT_RESET);
+			} catch (IllegalOptionException e) {
+				System.out.println(ColorUtility.RED_TEXT + "\nNot a listed option - Please input a listed option\n"
+						+ ColorUtility.TEXT_RESET);
 			}
-		
-		
-		}while(true);
-		
-		
-		
+
+		} while (true);
+
 	}
 
 	private void setMonthlyYearlyBudget(String year) {
@@ -323,11 +319,11 @@ public class ExpenseTrackerApp {
 			// NEW BUDGET
 			do {
 				try {
-					MonthlyBudget newBudget = new MonthlyBudget(null, year, Double.valueOf(0.0),
-							Double.valueOf(0.0), Double.valueOf(0.0), Double.valueOf(0.0), Double.valueOf(0.0), Double.valueOf(0.0),
-							Double.valueOf(0.0), Double.valueOf(0.0), Double.valueOf(0.0), Double.valueOf(0.0), Double.valueOf(0.0),
-							Double.valueOf(0.0), Double.valueOf(0.0), user);
-					
+					MonthlyBudget newBudget = new MonthlyBudget(null, year, Double.valueOf(0.0), Double.valueOf(0.0),
+							Double.valueOf(0.0), Double.valueOf(0.0), Double.valueOf(0.0), Double.valueOf(0.0),
+							Double.valueOf(0.0), Double.valueOf(0.0), Double.valueOf(0.0), Double.valueOf(0.0),
+							Double.valueOf(0.0), Double.valueOf(0.0), Double.valueOf(0.0), user);
+
 					System.out.println(ColorUtility.GREEN_TEXT + "\nDEFAULT BUDGET:");
 					System.out.println(newBudget);
 					System.out.print(ColorUtility.TEXT_RESET);
@@ -337,7 +333,7 @@ public class ExpenseTrackerApp {
 						System.out.print("\nJanuary Budget: $" + ColorUtility.CYAN_TEXT);
 						double amount = sc.nextDouble();
 						sc.nextLine();
-						
+
 						if (amount >= 0) {
 							newBudget.setJanuary(amount);
 							yearlyBudget = yearlyBudget + amount;
@@ -346,7 +342,7 @@ public class ExpenseTrackerApp {
 						}
 						break;
 					} while (true);
-					
+
 					// FEB
 					do {
 						System.out.print(ColorUtility.TEXT_RESET + "\nFebruary Budget: $" + ColorUtility.CYAN_TEXT);
@@ -361,8 +357,8 @@ public class ExpenseTrackerApp {
 						}
 						break;
 					} while (true);
-					
-					//MAR
+
+					// MAR
 					do {
 						System.out.print(ColorUtility.TEXT_RESET + "\nMarch Budget: $" + ColorUtility.CYAN_TEXT);
 						double amount = sc.nextDouble();
@@ -376,7 +372,7 @@ public class ExpenseTrackerApp {
 						}
 						break;
 					} while (true);
-					
+
 					// APR
 					do {
 						System.out.print(ColorUtility.TEXT_RESET + "\nApril Budget: $" + ColorUtility.CYAN_TEXT);
@@ -391,7 +387,7 @@ public class ExpenseTrackerApp {
 						}
 						break;
 					} while (true);
-					
+
 					// MAY
 					do {
 						System.out.print(ColorUtility.TEXT_RESET + "\nMay Budget: $" + ColorUtility.CYAN_TEXT);
@@ -406,7 +402,7 @@ public class ExpenseTrackerApp {
 						}
 						break;
 					} while (true);
-					
+
 					// JUN
 					do {
 						System.out.print(ColorUtility.TEXT_RESET + "\nJune Budget: $" + ColorUtility.CYAN_TEXT);
@@ -421,8 +417,8 @@ public class ExpenseTrackerApp {
 						}
 						break;
 					} while (true);
-					
-					//JUL
+
+					// JUL
 					do {
 						System.out.print(ColorUtility.TEXT_RESET + "\nJuly Budget: $" + ColorUtility.CYAN_TEXT);
 						double amount = sc.nextDouble();
@@ -436,8 +432,8 @@ public class ExpenseTrackerApp {
 						}
 						break;
 					} while (true);
-					
-					//AUG
+
+					// AUG
 					do {
 						System.out.print(ColorUtility.TEXT_RESET + "\nAugust Budget: $" + ColorUtility.CYAN_TEXT);
 						double amount = sc.nextDouble();
@@ -451,8 +447,8 @@ public class ExpenseTrackerApp {
 						}
 						break;
 					} while (true);
-					
-					//SEP
+
+					// SEP
 					do {
 						System.out.print(ColorUtility.TEXT_RESET + "\nSeptember Budget: $" + ColorUtility.CYAN_TEXT);
 						double amount = sc.nextDouble();
@@ -466,8 +462,8 @@ public class ExpenseTrackerApp {
 						}
 						break;
 					} while (true);
-					
-					//OCT
+
+					// OCT
 					do {
 						System.out.print(ColorUtility.TEXT_RESET + "\nOctober Budget: $" + ColorUtility.CYAN_TEXT);
 						double amount = sc.nextDouble();
@@ -481,8 +477,8 @@ public class ExpenseTrackerApp {
 						}
 						break;
 					} while (true);
-					
-					//NOV
+
+					// NOV
 					do {
 						System.out.print(ColorUtility.TEXT_RESET + "\nNovember Budget: $" + ColorUtility.CYAN_TEXT);
 						double amount = sc.nextDouble();
@@ -496,8 +492,8 @@ public class ExpenseTrackerApp {
 						}
 						break;
 					} while (true);
-					
-					//DEC
+
+					// DEC
 					do {
 						System.out.print(ColorUtility.TEXT_RESET + "\nDecember Budget: $" + ColorUtility.CYAN_TEXT);
 						double amount = sc.nextDouble();
@@ -511,7 +507,7 @@ public class ExpenseTrackerApp {
 						}
 						break;
 					} while (true);
-					
+
 					newBudget.setId(null);
 					newBudget.setUser(user);
 					newBudget.setYearlyBudget(yearlyBudget);
@@ -519,15 +515,17 @@ public class ExpenseTrackerApp {
 					user.getBudget().add(newBudget);
 					break;
 				} catch (InputMismatchException e) {
-					System.out.println(ColorUtility.RED_TEXT + "Invalid input - Please input a number\n" + ColorUtility.TEXT_RESET);
+					System.out.println(ColorUtility.RED_TEXT + "Invalid input - Please input a number\n"
+							+ ColorUtility.TEXT_RESET);
 					sc.nextLine();
 					continue;
 				} catch (IllegalOptionException e) {
-					System.out.println(ColorUtility.RED_TEXT + "Invalid input - Please input positive numbers\n" + ColorUtility.TEXT_RESET);
+					System.out.println(ColorUtility.RED_TEXT + "Invalid input - Please input positive numbers\n"
+							+ ColorUtility.TEXT_RESET);
 					continue;
 				}
-			} while(true);
-			
+			} while (true);
+
 		} else {
 			// EXISTING BUDGET
 			do {
@@ -538,13 +536,13 @@ public class ExpenseTrackerApp {
 							existingBudget = b;
 						}
 					}
-					
+
 					if (existingBudget == null) {
 						System.out.println(ColorUtility.RED_TEXT + "\nBudget not found for year: " + year);
 						System.out.println("Returning to menu...\n" + ColorUtility.TEXT_RESET);
 						return;
 					}
-					
+
 					System.out.println(ColorUtility.GREEN_TEXT + "\n" + year + " BUDGET:");
 					System.out.println(existingBudget);
 					System.out.print(ColorUtility.TEXT_RESET);
@@ -554,7 +552,7 @@ public class ExpenseTrackerApp {
 						System.out.print("\nJanuary Budget: $" + ColorUtility.CYAN_TEXT);
 						double amount = sc.nextDouble();
 						sc.nextLine();
-						
+
 						if (amount >= 0) {
 							existingBudget.setJanuary(amount);
 							yearlyBudget = yearlyBudget + amount;
@@ -563,7 +561,7 @@ public class ExpenseTrackerApp {
 						}
 						break;
 					} while (true);
-					
+
 					// FEB
 					do {
 						System.out.print(ColorUtility.TEXT_RESET + "\nFebruary Budget: $" + ColorUtility.CYAN_TEXT);
@@ -578,8 +576,8 @@ public class ExpenseTrackerApp {
 						}
 						break;
 					} while (true);
-					
-					//MAR
+
+					// MAR
 					do {
 						System.out.print(ColorUtility.TEXT_RESET + "\nMarch Budget: $" + ColorUtility.CYAN_TEXT);
 						double amount = sc.nextDouble();
@@ -593,7 +591,7 @@ public class ExpenseTrackerApp {
 						}
 						break;
 					} while (true);
-					
+
 					// APR
 					do {
 						System.out.print(ColorUtility.TEXT_RESET + "\nApril Budget: $" + ColorUtility.CYAN_TEXT);
@@ -608,7 +606,7 @@ public class ExpenseTrackerApp {
 						}
 						break;
 					} while (true);
-					
+
 					// MAY
 					do {
 						System.out.print(ColorUtility.TEXT_RESET + "\nMay Budget: $" + ColorUtility.CYAN_TEXT);
@@ -623,7 +621,7 @@ public class ExpenseTrackerApp {
 						}
 						break;
 					} while (true);
-					
+
 					// JUN
 					do {
 						System.out.print(ColorUtility.TEXT_RESET + "\nJune Budget: $" + ColorUtility.CYAN_TEXT);
@@ -638,8 +636,8 @@ public class ExpenseTrackerApp {
 						}
 						break;
 					} while (true);
-					
-					//JUL
+
+					// JUL
 					do {
 						System.out.print(ColorUtility.TEXT_RESET + "\nJuly Budget: $" + ColorUtility.CYAN_TEXT);
 						double amount = sc.nextDouble();
@@ -653,8 +651,8 @@ public class ExpenseTrackerApp {
 						}
 						break;
 					} while (true);
-					
-					//AUG
+
+					// AUG
 					do {
 						System.out.print(ColorUtility.TEXT_RESET + "\nAugust Budget: $" + ColorUtility.CYAN_TEXT);
 						double amount = sc.nextDouble();
@@ -668,8 +666,8 @@ public class ExpenseTrackerApp {
 						}
 						break;
 					} while (true);
-					
-					//SEP
+
+					// SEP
 					do {
 						System.out.print(ColorUtility.TEXT_RESET + "\nSeptember Budget: $" + ColorUtility.CYAN_TEXT);
 						double amount = sc.nextDouble();
@@ -683,8 +681,8 @@ public class ExpenseTrackerApp {
 						}
 						break;
 					} while (true);
-					
-					//OCT
+
+					// OCT
 					do {
 						System.out.print(ColorUtility.TEXT_RESET + "\nOctober Budget: $" + ColorUtility.CYAN_TEXT);
 						double amount = sc.nextDouble();
@@ -698,8 +696,8 @@ public class ExpenseTrackerApp {
 						}
 						break;
 					} while (true);
-					
-					//NOV
+
+					// NOV
 					do {
 						System.out.print(ColorUtility.TEXT_RESET + "\nNovember Budget: $" + ColorUtility.CYAN_TEXT);
 						double amount = sc.nextDouble();
@@ -713,8 +711,8 @@ public class ExpenseTrackerApp {
 						}
 						break;
 					} while (true);
-					
-					//DEC
+
+					// DEC
 					do {
 						System.out.print(ColorUtility.TEXT_RESET + "\nDecember Budget: $" + ColorUtility.CYAN_TEXT);
 						double amount = sc.nextDouble();
@@ -728,25 +726,27 @@ public class ExpenseTrackerApp {
 						}
 						break;
 					} while (true);
-					
+
 					existingBudget.setUser(user);
 					existingBudget.setYearlyBudget(yearlyBudget);
 					existingBudget = budgetService.updateExpense(existingBudget);
-					
+
 					break;
 				} catch (InputMismatchException e) {
-					System.out.println(ColorUtility.RED_TEXT + "Invalid input - Please input a number\n" + ColorUtility.TEXT_RESET);
+					System.out.println(ColorUtility.RED_TEXT + "Invalid input - Please input a number\n"
+							+ ColorUtility.TEXT_RESET);
 					sc.nextLine();
 					continue;
 				} catch (IllegalOptionException e) {
-					System.out.println(ColorUtility.RED_TEXT + "Invalid input - Please input positive numbers\n" + ColorUtility.TEXT_RESET);
+					System.out.println(ColorUtility.RED_TEXT + "Invalid input - Please input positive numbers\n"
+							+ ColorUtility.TEXT_RESET);
 					continue;
 				}
-			} while(true);
+			} while (true);
 		}
-		
+
 	}
-	
+
 	private void upcomingExpenseDisplay() {
 		System.out.println(ColorUtility.BLUE_TEXT + "+-------------------+");
 		System.out.println("| Upcoming Expenses |");
@@ -754,16 +754,16 @@ public class ExpenseTrackerApp {
 		int count = 5;
 		for (Expense e : user.getExpenses()) {
 			int diff = e.getDate().compareTo(LocalDateTime.now());
-			if ( diff > 0 ) {
+			if (diff > 0) {
 				System.out.println(e);
 				count--;
-				if (count <= 0 ) {
+				if (count <= 0) {
 					System.out.println(ColorUtility.TEXT_RESET);
 					return;
 				}
 			}
 		}
-		
+
 	}
 
 	private void displayBudget(String year) {
@@ -779,7 +779,7 @@ public class ExpenseTrackerApp {
 			System.out.println("Returning to menu...\n" + ColorUtility.TEXT_RESET);
 			return;
 		}
-		
+
 		double totalExpenses = 0;
 		for (Expense e : user.getExpenses()) {
 			if (year.equals(Integer.toString(e.getDate().getYear()))) {
@@ -788,24 +788,24 @@ public class ExpenseTrackerApp {
 			}
 		}
 		DecimalFormat df = new DecimalFormat("#.##");
-		
+
 		System.out.println(ColorUtility.BLUE_TEXT + "\n+------------+");
 		System.out.println("| Budget " + year + " |");
 		System.out.println("+------------+" + ColorUtility.TEXT_RESET);
 		System.out.println(ColorUtility.GREEN_TEXT + "\n" + budget);
 		System.out.println("\nTotal Expenses: \t$" + df.format(totalExpenses));
 		System.out.println("Total Year Budget: \t$" + df.format(budget.getYearlyBudget().doubleValue()));
-		
+
 		if (totalExpenses - budget.getYearlyBudget() > 0.00) {
 			System.out.println(ColorUtility.RED_TEXT + "\nYou are over budget!");
-			System.out.println("Amount Over Budget: $" + df.format(totalExpenses-budget.getYearlyBudget()));
+			System.out.println("Amount Over Budget: $" + df.format(totalExpenses - budget.getYearlyBudget()));
 			System.out.println("Please consider minimizing expenses\n" + ColorUtility.TEXT_RESET);
 		} else {
 			System.out.println(ColorUtility.GREEN_TEXT + "\nYou are on track for your budget!");
-			System.out.println("Amount In Excess: $" + df.format(-1.0*(totalExpenses-budget.getYearlyBudget())));
+			System.out.println("Amount In Excess: $" + df.format(-1.0 * (totalExpenses - budget.getYearlyBudget())));
 			System.out.println("Consider saving the money left in excess of your budget!\n" + ColorUtility.TEXT_RESET);
 		}
-		
+
 	}
 
 	private void displayBudget(String year, String month) {
@@ -821,12 +821,12 @@ public class ExpenseTrackerApp {
 			System.out.println("Returning to menu...\n" + ColorUtility.TEXT_RESET);
 			return;
 		}
-		
+
 		double totalExpenses = 0;
 		Month budgetMonth = Month.of(Integer.parseInt(month));
 		for (Expense e : user.getExpenses()) {
-			if (year.equals(Integer.toString(e.getDate().getYear())) &&
-					month.equals(Integer.toString(e.getDate().getMonth().getValue()))) {
+			if (year.equals(Integer.toString(e.getDate().getYear()))
+					&& month.equals(Integer.toString(e.getDate().getMonth().getValue()))) {
 				totalExpenses = totalExpenses + e.getAmount();
 				System.out.println(e);
 			}
@@ -834,30 +834,27 @@ public class ExpenseTrackerApp {
 		DecimalFormat df = new DecimalFormat("#.##");
 		String monthFormat = budgetMonth.toString();
 		String printHelper = "";
-		for (int i = 0; i < monthFormat.length(); i ++) {
+		for (int i = 0; i < monthFormat.length(); i++) {
 			printHelper = printHelper + "-";
 		}
-		
+
 		System.out.println(ColorUtility.BLUE_TEXT + "\n+-" + printHelper + "--------+");
 		System.out.println("| " + monthFormat + " Budget |");
 		System.out.println("+-" + printHelper + "--------+" + ColorUtility.TEXT_RESET);
 		System.out.println("\nTotal Expenses: \t$" + df.format(totalExpenses));
 		double monthlyBudget = MenuUtil.printMonthlyBudget(monthFormat, df, budget);
-		
-		
+
 		if (totalExpenses - monthlyBudget > 0.00) {
 			System.out.println(ColorUtility.RED_TEXT + "\nYou are over budget!");
-			System.out.println("Amount Over Budget: $" + df.format(totalExpenses-monthlyBudget));
+			System.out.println("Amount Over Budget: $" + df.format(totalExpenses - monthlyBudget));
 			System.out.println("Please consider minimizing expenses\n" + ColorUtility.TEXT_RESET);
 		} else {
 			System.out.println(ColorUtility.GREEN_TEXT + "\nYou are on track for your budget!");
-			System.out.println("Amount In Excess: $" + df.format(-1.0*(totalExpenses-monthlyBudget)));
+			System.out.println("Amount In Excess: $" + df.format(-1.0 * (totalExpenses - monthlyBudget)));
 			System.out.println("Consider saving the money left in excess of your budget!\n" + ColorUtility.TEXT_RESET);
 		}
-		
-	}
 
-	
+	}
 
 	private void expenseAction(String action) {
 		Map<Integer, Integer> years = expenseService.expenseYears(user);
@@ -869,35 +866,36 @@ public class ExpenseTrackerApp {
 			System.out.println("Returning to menu...\n" + ColorUtility.TEXT_RESET);
 			return;
 		}
-		String printYears = (years.isEmpty()) ? "No existing years" : ""; 
+		String printYears = (years.isEmpty()) ? "No existing years" : "";
 		if (printYears.isEmpty()) {
 			for (Map.Entry<Integer, Integer> i : years.entrySet()) {
-				printYears = printYears + "\n"+ i.getKey().toString() + " ";
+				printYears = printYears + "\n" + i.getKey().toString() + " ";
 			}
 		}
 		System.out.println();
 		System.out.println(ColorUtility.BLUE_TEXT + "+----------------+");
 		System.out.println("| Expense Wizard |");
 		System.out.println("+----------------+" + ColorUtility.TEXT_RESET);
-		
-		System.out.println(ColorUtility.TEXT_RESET + ColorUtility.PURPLE_TEXT + "[To cancel action, input exit]" + ColorUtility.TEXT_RESET);
+
+		System.out.println(ColorUtility.TEXT_RESET + ColorUtility.PURPLE_TEXT + "[To cancel action, input exit]"
+				+ ColorUtility.TEXT_RESET);
 		System.out.println(ColorUtility.BLUE_TEXT + "Input year to operate on:" + ColorUtility.CYAN_TEXT);
 		System.out.println("Existing years: " + printYears);
 		System.out.print(ColorUtility.TEXT_RESET + "Year: " + ColorUtility.CYAN_TEXT);
-		
-		String option = sc.nextLine();		
+
+		String option = sc.nextLine();
 		System.out.print(ColorUtility.TEXT_RESET);
-		
+
 		if (option.equalsIgnoreCase("exit")) {
 			return;
 		}
-		
+
 		String yearPattern = "^(19|2[0-9])\\d{2}$";
 		Pattern p = Pattern.compile(yearPattern);
 		Matcher m = p.matcher(option);
-		
+
 		if (m.matches()) {
-			
+
 			if (action.equals("NewExpense")) {
 				// add new expense
 				createNewExpense(option);
@@ -910,13 +908,14 @@ public class ExpenseTrackerApp {
 					removeExpense(option);
 				}
 			}
-			
+
 		} else {
-			System.out.println(ColorUtility.RED_TEXT + "Year entered does not fall in valid range. Please enter a year from 1900-2999");
+			System.out.println(ColorUtility.RED_TEXT
+					+ "Year entered does not fall in valid range. Please enter a year from 1900-2999");
 			System.out.println("Returning to menu...\n" + ColorUtility.TEXT_RESET);
 		}
 	}
-	
+
 	private void createNewExpense(String year) {
 		do {
 			try {
@@ -924,52 +923,49 @@ public class ExpenseTrackerApp {
 				Expense newExpense = new Expense();
 				newExpense.setUser(user);
 				System.out.println(ColorUtility.BLUE_TEXT + "What is the category for this expense?");
-				System.out.println(ColorUtility.PURPLE_TEXT + "["
-						+ Category.CLOTHING + " "
-						+ Category.FOOD + " "
-						+ Category.HOUSING + " "
-						+ Category.INSURANCE + " "
-						+ Category.TRANSPORTATION + " "
-						+ Category.UTILITIES + " "
-						+ Category.DEFAULT + "]");
+				System.out.println(ColorUtility.PURPLE_TEXT + "[" + Category.CLOTHING + " " + Category.FOOD + " "
+						+ Category.HOUSING + " " + Category.INSURANCE + " " + Category.TRANSPORTATION + " "
+						+ Category.UTILITIES + " " + Category.DEFAULT + "]");
 				System.out.println(ColorUtility.TEXT_RESET + "Category: " + ColorUtility.CYAN_TEXT);
 				String category = sc.nextLine();
 				boolean validOption = false;
-				
+
 				for (Category c : Category.values()) {
 					if (category.equalsIgnoreCase(c.toString())) {
 						validOption = true;
 					}
 				}
-				
+
 				if (!validOption) {
 					throw new IllegalOptionException();
 				}
-				
-				System.out.print(ColorUtility.BLUE_TEXT + "Input the dollar amount: " + ColorUtility.CYAN_TEXT + "\n$ ");
+
+				System.out
+						.print(ColorUtility.BLUE_TEXT + "Input the dollar amount: " + ColorUtility.CYAN_TEXT + "\n$ ");
 				double amount = sc.nextDouble();
 				sc.nextLine();
-				
+
 				System.out.println(ColorUtility.BLUE_TEXT + "Input the date for this expense: ");
 				System.out.println(ColorUtility.PURPLE_TEXT + "[MM-DD]" + ColorUtility.TEXT_RESET);
 				String expenseDate = sc.nextLine();
 				expenseDate = expenseDate.trim().replace(" ", "").replace("\n", "");
 				expenseDate = year + "-" + expenseDate + " 00:00";
-				
+
 				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 				LocalDateTime dateOfExpense1 = LocalDateTime.parse(expenseDate, formatter);
-				LocalDateTime dateOfExpense2 = LocalDateTime.of(Integer.parseInt(year), dateOfExpense1.getMonth(), dateOfExpense1.getDayOfMonth(), 0, 0, 0, 0);
-				
+				LocalDateTime dateOfExpense2 = LocalDateTime.of(Integer.parseInt(year), dateOfExpense1.getMonth(),
+						dateOfExpense1.getDayOfMonth(), 0, 0, 0, 0);
+
 				newExpense.setCategory(Category.valueOf(category.toUpperCase()));
 				newExpense.setAmount(amount);
 				newExpense.setDate(dateOfExpense2);
-				
+
 				Expense created = expenseService.createExpense(newExpense);
 				user.getExpenses().add(created);
 				expenseService.sortExpenses(user);
-				
-				
-				System.out.println(ColorUtility.BLUE_TEXT + "\nWould you like to add more for this year? [Y/n]" + ColorUtility.TEXT_RESET);
+
+				System.out.println(ColorUtility.BLUE_TEXT + "\nWould you like to add more for this year? [Y/n]"
+						+ ColorUtility.TEXT_RESET);
 				String answer = sc.nextLine();
 				if (answer.equalsIgnoreCase("y")) {
 					continue;
@@ -980,7 +976,7 @@ public class ExpenseTrackerApp {
 					System.out.println("Returning to menu anyway.");
 					return;
 				}
-				
+
 			} catch (IllegalOptionException e) {
 				System.out.println(ColorUtility.RED_TEXT + e.getMessage());
 				continue;
@@ -988,10 +984,10 @@ public class ExpenseTrackerApp {
 				System.out.println(ColorUtility.RED_TEXT + "Invalid date entered - please enter MM/DD format.");
 				continue;
 			}
-		} while(true);
-		
+		} while (true);
+
 	}
-	
+
 	private void removeExpense(String year) {
 		do {
 			try {
@@ -1000,7 +996,7 @@ public class ExpenseTrackerApp {
 				System.out.println(ColorUtility.TEXT_RESET + "ID: " + ColorUtility.CYAN_TEXT);
 				int expenseId = sc.nextInt();
 				sc.nextLine();
-				
+
 				boolean expenseExists = false;
 				Expense expenseToRemove = null;
 				for (Expense e : user.getExpenses()) {
@@ -1010,44 +1006,45 @@ public class ExpenseTrackerApp {
 						break;
 					}
 				}
-				
+
 				if (!expenseExists) {
 					throw new IllegalOptionException();
 				}
-				
+
 				user.getExpenses().remove(expenseToRemove);
 				expenseService.removeExpenseById(expenseId);
 				userService.updateUser(user);
-				
+
 				System.out.println(ColorUtility.GREEN_TEXT + "\nExpense Successfully Removed!");
-				System.out.println(ColorUtility.BLUE_TEXT + "\nWould you like to remove more for this year? [Y/n]" + ColorUtility.TEXT_RESET);
+				System.out.println(ColorUtility.BLUE_TEXT + "\nWould you like to remove more for this year? [Y/n]"
+						+ ColorUtility.TEXT_RESET);
 				String answer = sc.nextLine();
 				if (answer.equalsIgnoreCase("y")) {
 					continue;
 				} else {
 					return;
 				}
-				
+
 			} catch (InputMismatchException e) {
 				System.out.println(ColorUtility.RED_TEXT + "Invalid expense ID - please enter an ID from the list.");
 				sc.nextLine();
 				continue;
 			} catch (IllegalOptionException e) {
-			
+
 				System.out.println(ColorUtility.RED_TEXT + e.getMessage());
 				continue;
 			} catch (DateTimeParseException e) {
 				System.out.println(ColorUtility.RED_TEXT + "Invalid date entered - please enter MM/DD format.");
 				continue;
 			}
-		} while(true);
+		} while (true);
 	}
 
 	private void printExpenses() {
 		System.out.println(ColorUtility.GREEN_TEXT + "+----------+");
 		System.out.println("| Expenses |");
 		System.out.println("+----------+");
-		if (user.getExpenses().size() > 0 ) {
+		if (user.getExpenses().size() > 0) {
 			for (Expense e : user.getExpenses()) {
 				System.out.println(e);
 			}
@@ -1055,31 +1052,30 @@ public class ExpenseTrackerApp {
 			System.out.println("***NO EXPENSES TO SHOW***");
 		}
 		System.out.println(ColorUtility.TEXT_RESET);
-		
+
 	}
-	
+
 	private String validateYear() {
 		do {
 			try {
 				System.out.println(ColorUtility.BLUE_TEXT + "Please input a year for budget:");
 				System.out.println(ColorUtility.TEXT_RESET + "Year: " + ColorUtility.CYAN_TEXT);
 				String year = sc.nextLine();
-				
-				
+
 				String yearPattern = "^(19|2[0-9])\\d{2}$";
 				Pattern p = Pattern.compile(yearPattern);
 				Matcher m = p.matcher(year);
-				
+
 				if (m.matches()) {
 					return year;
 				}
-				
+
 				throw new IllegalOptionException();
 			} catch (IllegalOptionException e) {
 				System.out.println(ColorUtility.RED_TEXT + "Please input a valid year | 1900-2999");
 				continue;
 			}
-		} while(true);
+		} while (true);
 	}
 
 	private String validateMonth() {
@@ -1089,17 +1085,17 @@ public class ExpenseTrackerApp {
 				System.out.println(ColorUtility.TEXT_RESET + "Month: " + ColorUtility.CYAN_TEXT);
 				String month = sc.nextLine();
 				int monthValue = Integer.parseInt(month.replace("0", ""));
-				
+
 				if (monthValue > 12 || monthValue < 1) {
 					throw new IllegalOptionException();
 				}
-				
+
 				return month.replace("0", "");
-			}  catch (IllegalOptionException e) {
+			} catch (IllegalOptionException e) {
 				System.out.println(ColorUtility.RED_TEXT + "Please input a valid month | [MM]");
 				continue;
 			}
-		} while(true);
-		
+		} while (true);
+
 	}
 }
