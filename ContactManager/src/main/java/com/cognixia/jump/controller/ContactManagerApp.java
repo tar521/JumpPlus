@@ -183,7 +183,13 @@ public class ContactManagerApp {
 						methodOption("delete");
 						break;
 					case 4: // Sort
-						sortOption();
+						if (user.getContact().size() > 1) {
+							sortOption();
+						} else {
+							System.out.println(ColorUtility.RED_TEXT + "\nCannot sort contacts.");
+							System.out.println("Must have 2 or more contacts\n" + ColorUtility.TEXT_RESET);
+						}
+						
 						break;
 					case 5: // Logout
 						user = null;
@@ -363,7 +369,11 @@ public class ContactManagerApp {
 	}
 
 	private void methodOption(String method) {
-		
+		if (user.getContact().size() <= 0) {
+			System.out.println(ColorUtility.RED_TEXT + "\nNo contacts! Cannot update or delete.");
+			System.out.println("Returning to menu.\n" + ColorUtility.TEXT_RESET);
+			return;
+		}
 		do {
 			try {
 				System.out.println(ColorUtility.YELLOW_TEXT + "\nEnter option to look up contact for " + method + ": ");
