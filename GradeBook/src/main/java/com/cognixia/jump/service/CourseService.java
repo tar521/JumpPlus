@@ -31,5 +31,9 @@ public class CourseService {
 	public void removeCourse(Course course) {
 		repo.delete(course);
 	}
+	
+	public Course getCourseById(Course course) {
+		return repo.findById(course.getId()).get();
+	}
 
 }

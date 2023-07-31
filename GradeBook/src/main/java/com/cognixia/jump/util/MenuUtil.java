@@ -84,8 +84,8 @@ public class MenuUtil {
 		System.out.printf("| ID and Name |   Grade    | Grade  |   Grade    |  Grade  |   Grade    | Grade  |   Grade    | Grade  | Grade  |%n");
 		for (GradeUtil g : grades) {
 			System.out.printf("-----------------------------------------------------------------------------------------------------------------%n");
-			System.out.printf("| %-11s |    %1d/3     |  %1d/1   |    %1d/3     |   %1d/1   |    %1d/3     |  %1d/1    |    %1d/3     |  %1d/1  |        |%n", g.getCourseName(), g.getHw1TurnedIn(), g.getQuiz1TurnedIn(), g.getHw2TurnedIn(), g.getMidtermTurnedIn(), g.getHw3TurnedIn(), g.getQuiz2TurnedIn(), g.getHw4TurnedIn(), g.getFinalTurnedIn());
-			System.out.printf("| %3d         |   %6.2f   | %6.2f |   %6.2f   |  %6.2f |   %6.2f   | %6.2f |   %6.2f   | %6.2f | %6.2f |%n", g.getStudentId(), g.getStudentName(), g.getHw1Grade(), g.getQuiz1Grade(), g.getHw2Grade(), g.getMidtermGrade(), g.getHw3Grade(), g.getQuiz2Grade(), g.getHw4Grade(), g.getFinalGrade(), g.getCourseGrade());
+			System.out.printf("| %-11s |    %1d/3     |  %1d/1   |    %1d/3     |   %1d/1   |    %1d/3     |  %1d/1   |    %1d/3     |  %1d/1   |        |%n", g.getCourseName().length() > 11 ? g.getCourseName().substring(0,11) : g.getCourseName(), g.getHw1TurnedIn(), g.getQuiz1TurnedIn(), g.getHw2TurnedIn(), g.getMidtermTurnedIn(), g.getHw3TurnedIn(), g.getQuiz2TurnedIn(), g.getHw4TurnedIn(), g.getFinalTurnedIn());
+			System.out.printf("|             |   %6.2f   | %6.2f |   %6.2f   |  %6.2f |   %6.2f   | %6.2f |   %6.2f   | %6.2f | %6.2f |%n", g.getHw1Grade(), g.getQuiz1Grade(), g.getHw2Grade(), g.getMidtermGrade(), g.getHw3Grade(), g.getQuiz2Grade(), g.getHw4Grade(), g.getFinalGrade(), g.getCourseGrade());
 		}
 		System.out.printf("-----------------------------------------------------------------------------------------------------------------%n");
 	}

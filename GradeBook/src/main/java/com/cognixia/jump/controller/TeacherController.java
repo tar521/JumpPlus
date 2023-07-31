@@ -108,6 +108,7 @@ public class TeacherController {
 						
 						break;
 					case 4:
+						teacher = null;
 						return;
 					default:
 						throw new IllegalOptionException();

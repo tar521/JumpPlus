@@ -2,6 +2,7 @@ package com.cognixia.jump.controller;
 
 import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,10 +11,12 @@ import com.cognixia.jump.exceptions.IllegalOptionException;
 import com.cognixia.jump.model.Grade;
 import com.cognixia.jump.model.Schedule;
 import com.cognixia.jump.model.Student;
+import com.cognixia.jump.service.CourseService;
 import com.cognixia.jump.service.GradeService;
 import com.cognixia.jump.service.ScheduleService;
 import com.cognixia.jump.service.UserService;
 import com.cognixia.jump.util.ColorUtility;
+import com.cognixia.jump.util.GradeUtil;
 import com.cognixia.jump.util.MenuUtil;
 
 @Component
@@ -27,6 +30,9 @@ public class StudentController {
 	
 	@Autowired
 	private ScheduleService scheduleService;
+	
+	@Autowired
+	private CourseService courseService;
 	
 	private Student student;
 	
@@ -61,13 +67,34 @@ public class StudentController {
 	}
 
 	private void session() {
+		List<GradeUtil> grades = new ArrayList<GradeUtil>();
+		if (!student.getSchedule().isEmpty()) {
+			for (Schedule s : student.getSchedule()) {
+				GradeUtil calcGrades = new GradeUtil();
+				calcGrades.setStudentId(student.getId());
+				calcGrades.setStudentName(student.getName());
+				calcGrades.setCourseName(courseService.getCourseById(s.getCourse()).getName());
+				calcGrades.populateGradeStudent(gradeService.loadGradesByCourseAndStudent(s, student));
+				grades.add(calcGrades);
+			}
+		}
 		do {
 			try {
+				if (!grades.isEmpty()) {
+					MenuUtil.printExpandedGrades(grades);
+				} else {
+					System.out.println(ColorUtility.RED_TEXT + "\n*** No grades! ***\n");
+				}
+				System.out.println(ColorUtility.YELLOW_TEXT + "\n[Type 'exit' to logout]");
+				String exit = Gradebook.sc.nextLine();
+				if (exit.equalsIgnoreCase("exit")) {
+					student = null;
+					return;
+				} else {
+					throw new IllegalOptionException();
+				}
 				
 
-			} catch (InputMismatchException e) {
-				System.out.println(ColorUtility.RED_TEXT + "\nNot a valid option. Please try again!\n");
-				Gradebook.sc.nextLine();
 			} catch (IllegalOptionException e) {
 				System.out.println(ColorUtility.RED_TEXT + "\nNot a valid option. Please try again!\n");
 			}
