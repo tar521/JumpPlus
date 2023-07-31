@@ -54,7 +54,7 @@ public class Gradebook {
 				switch (option) {
 					case 1:
 						// Login
-						System.out.print(ColorUtility.YELLOW_TEXT + "\nEnter your email:" + ColorUtility.CYAN_TEXT);
+						System.out.print(ColorUtility.YELLOW_TEXT + "\nEnter your email: " + ColorUtility.CYAN_TEXT);
 						Credentials cred = new Credentials();
 						cred.setEmail(sc.nextLine().toLowerCase());
 						
