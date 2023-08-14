@@ -1,0 +1,17 @@
+● Define what you consider to be 'ethical usage' of this technology.
+	First, I want to identify the 'users' of this AI. For the sake of the exercise I am going to assume
+		that this AI is available to the public. In terms of 'ethical usage', it will be in the ULA that 
+		no public figures are allowed to be used. For anything generated with identifiable public figures, or with
+		high probability of the prompt asking for a subject being a public figure, it will not be allowed to be downloaded, viewed,
+		shared, etc. If there is an issue with the content generated being 'locked' while still following the ULA, there will be an appeals
+		process for users to undergo to ensure fairness after further review. 
+	It goes without saying, but anything created cannot be inflammitory, or outright non-factual.
+	
+● Identify three potential risks or ethical dilemmas that could arise from misuse of this AI.
+	Potential risks are the spreading of misinformation, defamation of figures generated, and inappropriate content without consent of the subjects generated.
+	
+● Propose specific measures to mitigate these risks.
+	To prevent the risks, there would need to possibly be the use of multiple AI models for fact checking and content filtering.
+		There would have to be a bias in the AI model to not produce inappropriate or identifiable, inflammitory content and prompts.
+		As well as having a possible list of people that it absolutely cannot generate any content about - even if the user
+		is a person on that list.
