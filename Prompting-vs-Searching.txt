@@ -1,0 +1,39 @@
+1. Give me a historical breakdown of the winners of the Nobel Prize in Physics from the past
+decade.
+	Google - The search engine will have up-to-date data to ensure we don't miss anyone.
+	
+2. Could you illustrate a hypothetical conversation where Shakespeare discusses his writing
+process?
+	ChatGPT - Albeit someone has posted this hypothical conversation somewhere on the internet, ChatGPT would do
+		a better job generating this conversation.
+	
+3. How many people call Tokyo their home?
+	Google - The search engine will have up-to-date data.
+	
+4. Let's walk through the steps involved in running a sentiment analysis using Python.
+	Both - This is something that has been done before. Considering how popular Python is,
+		there is a guide in the first search in a search engine, and ChatGPT can give you step
+		by step necessities for the code with you having to put it together.
+	
+5. I'm curious about the average distance between our planet and the Red Planet.
+	Both - Both a search engine and ChatGPT will have this information.
+	
+6. What ideas can you come up with for a unique project that intertwines data analysis with
+Generative AI?
+	ChatGPT - Who better to give reccomendations on how to use Gen AI than Gen AI.
+	
+7. Can you summarize some key motifs in political history spanning the previous century?
+	ChatGPT (with fact checking) - It will be easier to get a short summary from ChatGPT.
+		However, fact checking will be necessary. There does exist a summary via search engine,
+		but it terms of ease-of-access and speed, ChatGPT with fact checking will be better.
+	
+8. The Great Wall of China, how far does it stretch exactly?
+	Both - Both will have this data.
+	
+9. Can you elucidate how Python's Global Interpreter Lock affects the performance of
+multi-threading?
+	Both - Python is a very documented and popular language. Both will be able to give
+		proper answers to this.
+	
+10. What momentous event in American history took place on July 4, 1776?
+	Both - If ChatGPT has this in its training data, then both will be able to answer this.
